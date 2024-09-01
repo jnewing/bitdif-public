@@ -9,7 +9,7 @@ bitdif is a free and open-source, self-hosted image hosting platform similar to 
 ## Table of Contents
 
 - [Features](#features)
-- [Demo](#demo)
+- [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -36,8 +36,6 @@ bitdif is a free and open-source, self-hosted image hosting platform similar to 
 ![](https://bitdif.com/916e13c8.png "Upload Page")
 ![](https://bitdif.com/e650340e.png "Basic Settings")
 ![](https://bitdif.com/88a92a40.png "View Image In Gallery")
-
-You can check out a live demo of bitdif at [bitdif.com](https://bitdif.com).
 
 ## Requirements
 
