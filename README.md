@@ -78,13 +78,19 @@ You can check out a live demo of bitdif at [bitdif.com](https://bitdif.com).
     php artisan migrate
     ```
 
-5. **Build frontend assets:**
+5. **Link storage:**
+
+    ```bash
+    php artisan storage:link
+    ```
+    
+6. **Build frontend assets:**
 
     ```bash
     npm run dev
     ```
 
-6. **Start the development server:**
+7. **Start the development server:**
 
     ```bash
     php artisan serve
