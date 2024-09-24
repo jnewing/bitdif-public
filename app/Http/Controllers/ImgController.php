@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessThumbnail;
+use App\Models\Img;
+use App\Models\ImgView;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Ramsey\Uuid\Uuid;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
-use ZipArchive;
-
 use lib\BitDif\BitDif;
-
-use App\Jobs\ProcessThumbnail;
-
-use App\Models\Img;
-use App\Models\ImgView;
+use Ramsey\Uuid\Uuid;
+use ZipArchive;
 
 class ImgController extends Controller
 {
@@ -36,8 +32,8 @@ class ImgController extends Controller
         return Inertia::render('Img/Index', [
             'images' => $images->appends(['sort' => $request->input('sort'), 'order' => $request->input('order')]),
             'sortOptions' => [
-                'sort' =>   ['id' => $sort],
-                'order' =>  ['id' => $order],
+                'sort' => ['id' => $sort],
+                'order' => ['id' => $order],
             ],
         ]);
     }
@@ -88,15 +84,15 @@ class ImgController extends Controller
 
             // first add the image to the db
             $i = Img::create([
-                'oid'                   => explode('-', (string) Uuid::uuid4())[0],
-                'user_id'               => Auth::id(),
-                'original_name'         => $image->getClientOriginalName(),
-                'original_extension'    => $image->getClientOriginalExtension(),
-                'file_name'             => $files['name'],
-                'path'                  => implode(DIRECTORY_SEPARATOR, $relative_path),
-                'public_path'           => implode(DIRECTORY_SEPARATOR, $public_path),
-                'mime_type'             => $image->getMimeType(),
-                'file_size'             => $image->getSize(),
+                'oid' => explode('-', (string) Uuid::uuid4())[0],
+                'user_id' => Auth::id(),
+                'original_name' => $image->getClientOriginalName(),
+                'original_extension' => $image->getClientOriginalExtension(),
+                'file_name' => $files['name'],
+                'path' => implode(DIRECTORY_SEPARATOR, $relative_path),
+                'public_path' => implode(DIRECTORY_SEPARATOR, $public_path),
+                'mime_type' => $image->getMimeType(),
+                'file_size' => $image->getSize(),
             ]);
 
             // pass off the thumbnail creation to a job
@@ -112,7 +108,6 @@ class ImgController extends Controller
     /**
      * Bulk uploading function, takes a zip file and extracts the images.
      *
-     * @param Request $request
      * @return void
      */
     public function bulk_upload(Request $request): RedirectResponse
@@ -124,13 +119,13 @@ class ImgController extends Controller
         ]);
 
         // temp zip upload path
-        $path = 'zip/' . (string) Uuid::uuid4();
+        $path = 'zip/'.(string) Uuid::uuid4();
 
         // handel the uplaoded file
         $zipFile = $request->file('zipfile');
         $zipFilePath = $zipFile->storeAs($path, $zipFile->getClientOriginalName());
 
-        $valid_files = $this->unzip_file(storage_path('/app/' . $zipFilePath));
+        $valid_files = $this->unzip_file(storage_path('/app/'.$zipFilePath));
 
         // lets upload the images
         foreach ($valid_files as $image) {
@@ -151,15 +146,15 @@ class ImgController extends Controller
 
             // first add the image to the db
             $i = Img::create([
-                'oid'                   => explode('-', (string) Uuid::uuid4())[0],
-                'user_id'               => Auth::id(),
-                'original_name'         => pathinfo($image, PATHINFO_FILENAME),
-                'original_extension'    => pathinfo($image, PATHINFO_EXTENSION),
-                'file_name'             => $files['name'],
-                'path'                  => implode(DIRECTORY_SEPARATOR, $relative_path),
-                'public_path'           => implode(DIRECTORY_SEPARATOR, $public_path),
-                'mime_type'             => mime_content_type($image),
-                'file_size'             => filesize($image),
+                'oid' => explode('-', (string) Uuid::uuid4())[0],
+                'user_id' => Auth::id(),
+                'original_name' => pathinfo($image, PATHINFO_FILENAME),
+                'original_extension' => pathinfo($image, PATHINFO_EXTENSION),
+                'file_name' => $files['name'],
+                'path' => implode(DIRECTORY_SEPARATOR, $relative_path),
+                'public_path' => implode(DIRECTORY_SEPARATOR, $public_path),
+                'mime_type' => mime_content_type($image),
+                'file_size' => filesize($image),
             ]);
 
             // pass off the thumbnail creation to a job
@@ -170,7 +165,7 @@ class ImgController extends Controller
 
         // todo.. we need a better cleanup job.
         // maybe move this off to a job?
-        self::rmrf(storage_path('app/' . $path));
+        self::rmrf(storage_path('app/'.$path));
 
         return redirect()->route('gallery.index');
     }
@@ -186,7 +181,7 @@ class ImgController extends Controller
         return Inertia::render('View', [
             'image' => $img,
             'views' => $img->views()->count(),
-            'size'  => $img->file_size,
+            'size' => $img->file_size,
         ]);
     }
 
@@ -194,7 +189,7 @@ class ImgController extends Controller
     {
         $url = $request->query('url');
 
-        if (!$url) {
+        if (! $url) {
             return response()->json(['error' => 'No URL provided.'], 400);
         }
 
@@ -219,14 +214,13 @@ class ImgController extends Controller
     {
         // log the view
         $this->log_view($img->id, Auth::check() ? Auth::id() : null, $request->ip());
-        return response()->file(storage_path('app/' . $img->path . '/' . $img->file_name));
+
+        return response()->file(storage_path('app/'.$img->path.'/'.$img->file_name));
     }
 
     /**
      * Route to show an image, either direct or in-direct.
      *
-     * @param Request $request
-     * @param string $id
      * @return void
      */
     public function show_img(Request $request, string $id)
@@ -254,10 +248,10 @@ class ImgController extends Controller
         // does the user own this image?
         if ($img->user_id == Auth::id()) {
             // delete the file
-            Storage::delete(storage_path(storage_path('app/' . $img->path . '/' . $img->file_name)));
+            Storage::delete(storage_path(storage_path('app/'.$img->path.'/'.$img->file_name)));
 
             // delete the thumb
-            Storage::delete(storage_path(storage_path('app/' . $img->path . '/' . $img->thumbnail_name)));
+            Storage::delete(storage_path(storage_path('app/'.$img->path.'/'.$img->thumbnail_name)));
 
             // delete the db entry
             $img->delete();
@@ -269,23 +263,22 @@ class ImgController extends Controller
     /**
      * Remove many of the specified resources from storage.
      *
-     * @param Request $request
-     * @param array $ids
+     * @param  array  $ids
      * @return void
      */
     public function selected_destroy(Request $request): RedirectResponse
     {
         $imgs = Img::whereIn('id', $request->input('ids'))
-                    ->where('user_id', Auth::user()->id)
-                    ->get();
+            ->where('user_id', Auth::user()->id)
+            ->get();
 
         // delete files
         foreach ($imgs as $i) {
             // delete the file
-            Storage::delete(storage_path(storage_path('app/' . $i->path . '/' . $i->file_name)));
+            Storage::delete(storage_path(storage_path('app/'.$i->path.'/'.$i->file_name)));
 
             // delete the thumb
-            Storage::delete(storage_path(storage_path('app/' . $i->path . '/' . $i->thumbnail_name)));
+            Storage::delete(storage_path(storage_path('app/'.$i->path.'/'.$i->thumbnail_name)));
 
             // delete db entry
             $i->delete();
@@ -296,26 +289,20 @@ class ImgController extends Controller
 
     /**
      * Logs the view to the image, be it direct or in-direct.
-     *
-     * @param integer $img_id
-     * @param integer|null $user_id
-     * @param string|null $ip_address
-     * @return void
      */
-    private function log_view(int $img_id, int $user_id = null, string $ip_address = null): void
+    private function log_view(int $img_id, ?int $user_id = null, ?string $ip_address = null): void
     {
         // check if this view is counted or not
         // $userId = Auth::check() ? Auth::id() : null;
         // $ipAddress = $request->ip();
 
-        if (!ImgView::where('img_id', $img_id)
-                              ->when($user_id, function($query, $user_id) {
-                                  return $query->where('user_id', $user_id);
-                              }, function($query) use ($ip_address) {
-                                  return $query->where('ip_address', $ip_address);
-                              })
-                              ->exists())
-        {
+        if (! ImgView::where('img_id', $img_id)
+            ->when($user_id, function ($query, $user_id) {
+                return $query->where('user_id', $user_id);
+            }, function ($query) use ($ip_address) {
+                return $query->where('ip_address', $ip_address);
+            })
+            ->exists()) {
             ImgView::create([
                 'img_id' => $img_id,
                 'user_id' => $user_id,
@@ -326,17 +313,14 @@ class ImgController extends Controller
 
     /**
      * Unzip a given file and return an array of .png or .jpg files.
-     *
-     * @param string $zip_file_path
-     * @return array
      */
     private function unzip_file(string $zip_file_path): array
     {
         $valid_files = [];
         $zip = new ZipArchive;
 
-        if ($zip->open($zip_file_path) === TRUE) {
-            $extractPath = dirname($zip_file_path) . '/ext/';
+        if ($zip->open($zip_file_path) === true) {
+            $extractPath = dirname($zip_file_path).'/ext/';
             $zip->extractTo($extractPath);
             $zip->close();
 
@@ -355,14 +339,13 @@ class ImgController extends Controller
     /**
      * Recursive function to delete everything in a directory.
      *
-     * @param string $dir
      * @return void
      */
     private static function rmrf(string $dir): bool
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $f) {
-            (is_dir($dir . DIRECTORY_SEPARATOR . $f)) ? self::rmrf($dir . DIRECTORY_SEPARATOR . $f) : unlink($dir . DIRECTORY_SEPARATOR . $f);
+            (is_dir($dir.DIRECTORY_SEPARATOR.$f)) ? self::rmrf($dir.DIRECTORY_SEPARATOR.$f) : unlink($dir.DIRECTORY_SEPARATOR.$f);
         }
 
         return rmdir($dir);

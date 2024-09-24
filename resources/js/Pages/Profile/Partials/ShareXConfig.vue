@@ -1,7 +1,4 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { Link } from '@inertiajs/vue3';
-import moment from 'moment';
 
 const props = defineProps({
     hasKey: {
@@ -24,7 +21,7 @@ const props = defineProps({
                 <div class="px-4 py-6 sm:p-8">
                     <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div class="sm:col-span-10">
-                            <p class="mt-1 text-sm leading-6 text-gray-400">Becuase we love ShareX here at bitdif, we wanted to provide you with a quick and easy way to intagrate with them.</p>
+                            <p class="mt-1 text-sm leading-6 text-gray-400">Because we love ShareX here at bitdif, we wanted to provide you with a quick and easy way to integrate with them.</p>
                         </div>
                     </div>
                 </div>

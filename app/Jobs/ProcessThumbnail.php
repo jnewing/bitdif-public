@@ -2,19 +2,16 @@
 
 namespace App\Jobs;
 
+use App\Models\Img;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-
 // use Intervention\Image\ImageManagerStatic as Image;
-use Intervention\Image\ImageManager;
+use Illuminate\Queue\SerializesModels;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
-
-use App\Models\Img;
+use Intervention\Image\ImageManager;
 
 class ProcessThumbnail implements ShouldQueue
 {
@@ -39,9 +36,8 @@ class ProcessThumbnail implements ShouldQueue
         // $img = Image::make($img_path)->resize(162, 162)->save($thumb_path);
         // $img = Image::make($img_path)->cover(162, 162)->save($thumb_path);
 
-        $manager = new ImageManager(new Driver());
+        $manager = new ImageManager(new Driver);
         $img = $manager->read($img_path)->coverDown(162, 162)->save($thumb_path);
-
 
         // now update the image record
         $this->image->update([

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
  * Application Routes
  * All routes that require authentication
  */
-
 Route::get('/', function () {
     return redirect()->route('gallery.index');
 });
@@ -33,10 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings/sharex', [App\Http\Controllers\ProfileController::class, 'sharex'])->name('settings.sharex');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 /**
  * Image Routes
  */
-
 Route::middleware('cache.headers:public;max_age=2628000;etag')->get('/{id}', [App\Http\Controllers\ImgController::class, 'show_img'])->name('img');

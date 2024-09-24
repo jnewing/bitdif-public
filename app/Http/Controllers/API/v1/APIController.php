@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use App\Jobs\ProcessThumbnail;
-
-use lib\BitDif\BitDif;
-
-use App\Models\User;
 use App\Models\Img;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use lib\BitDif\BitDif;
+use Ramsey\Uuid\Uuid;
 
 class APIController extends Controller
 {
@@ -50,15 +46,15 @@ class APIController extends Controller
 
             // first add the image to the db
             $i = Img::create([
-                'oid'                   => explode('-', (string) Uuid::uuid4())[0],
-                'user_id'               => $user->id,
-                'original_name'         => $image->getClientOriginalName(),
-                'original_extension'    => $image->getClientOriginalExtension(),
-                'file_name'             => $files['name'],
-                'path'                  => implode(DIRECTORY_SEPARATOR, $relative_path),
-                'public_path'           => implode(DIRECTORY_SEPARATOR, $public_path),
-                'mime_type'             => $image->getMimeType(),
-                'file_size'             => $image->getSize(),
+                'oid' => explode('-', (string) Uuid::uuid4())[0],
+                'user_id' => $user->id,
+                'original_name' => $image->getClientOriginalName(),
+                'original_extension' => $image->getClientOriginalExtension(),
+                'file_name' => $files['name'],
+                'path' => implode(DIRECTORY_SEPARATOR, $relative_path),
+                'public_path' => implode(DIRECTORY_SEPARATOR, $public_path),
+                'mime_type' => $image->getMimeType(),
+                'file_size' => $image->getSize(),
             ]);
 
             // pass off the thumbnail creation to a job
@@ -67,9 +63,9 @@ class APIController extends Controller
             }
 
             return [
-                'status'    => 200,
-                'data'      => [
-                    'link'  => route('img', ['id' => $i->oid]),
+                'status' => 200,
+                'data' => [
+                    'link' => route('img', ['id' => $i->oid]),
                 ],
             ];
 
