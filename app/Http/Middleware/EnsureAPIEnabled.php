@@ -15,7 +15,7 @@ class EnsureAPIEnabled
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!config('app.enable_api')) {
+        if (! config('app.enable_api')) {
             return response()->json([
                 'error' => 'API is disabled',
             ], 403);

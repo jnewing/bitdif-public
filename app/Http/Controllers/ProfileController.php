@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -46,22 +45,21 @@ class ProfileController extends Controller
     /**
      * Generate a ShareX configuration file.
      *
-     * @param Request $request
      * @return void
      */
     public function sharex(Request $request): \Illuminate\Http\Response
     {
         $sharex_config = [
-            "Version" => "16.1.0",
-            "DestinationType" => "ImageUploader",
-            "RequestMethod" => "POST",
-            "RequestURL" => "https://bitdif.com/api/v1/upload",
-            "Headers" => [
-                "Authorization" => "Bearer {$request->user()->api_token}",
+            'Version' => '16.1.0',
+            'DestinationType' => 'ImageUploader',
+            'RequestMethod' => 'POST',
+            'RequestURL' => 'https://bitdif.com/api/v1/upload',
+            'Headers' => [
+                'Authorization' => "Bearer {$request->user()->api_token}",
             ],
-            "Body" => "MultipartFormData",
-            "FileFormName" => "image",
-            "URL" => "{json:data.link}",
+            'Body' => 'MultipartFormData',
+            'FileFormName' => 'image',
+            'URL' => '{json:data.link}',
         ];
 
         return response(json_encode($sharex_config), 200, [
@@ -95,7 +93,6 @@ class ProfileController extends Controller
     /**
      * Update the users API key.
      *
-     * @param Request $request
      * @return void
      */
     public function apikey(Request $request): RedirectResponse
@@ -110,7 +107,4 @@ class ProfileController extends Controller
         return Redirect::route('settings')
             ->with('message', $token);
     }
-
-
-
 }

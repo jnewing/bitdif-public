@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-
-Route::prefix('v1')->group(function() {
+Route::prefix('v1')->group(function () {
     Route::post('/upload', [App\Http\Controllers\API\v1\APIController::class, 'upload']);
 });

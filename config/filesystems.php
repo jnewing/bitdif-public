@@ -37,9 +37,9 @@ return [
         ],
 
         'imgs' => [
-            'driver'    => 'local',
-            'root'      => storage_path('app/public/uploads'),
-            'throw'     => false,
+            'driver' => 'local',
+            'root' => storage_path('app/public/uploads'),
+            'throw' => false,
         ],
 
         'public' => [

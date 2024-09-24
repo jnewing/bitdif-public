@@ -17,15 +17,13 @@ class BitDif
         $rnd_name = explode('-', (string) Uuid::uuid4())[0];
 
         return [
-            'name' => $rnd_name . '.' . $ext,
-            'thumb' => $rnd_name . '_thumb.' . $ext,
+            'name' => $rnd_name.'.'.$ext,
+            'thumb' => $rnd_name.'_thumb.'.$ext,
         ];
     }
 
     /**
      * Reuturns the max file size.
-     *
-     * @return integer
      */
     public static function file_upload_max_size(): int
     {
@@ -54,7 +52,6 @@ class BitDif
      * Parse a size value from a string.
      *
      * @param [type] $size
-     * @return integer
      */
     public static function parse_size($size): int
     {
@@ -71,8 +68,6 @@ class BitDif
 
     /**
      * Get the max files that can be uploaded at once.
-     *
-     * @return integer
      */
     public static function get_max_files(): int
     {

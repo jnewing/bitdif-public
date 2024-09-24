@@ -20,9 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Custom route rule for outward facing images, this allow the end user to appnd all kinds of 
+        // Custom route rule for outward facing images, this allow the end user to appnd all kinds of
         // extensions to the image id and they will stilll get a valid image file returned.
-        Route::bind('oimg', function($val) {
+        Route::bind('oimg', function ($val) {
             return \App\Models\Img::where('oid', substr($val, 0, 8))->firstOrFail();
         });
     }

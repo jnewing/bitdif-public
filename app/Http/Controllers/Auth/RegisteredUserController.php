@@ -24,7 +24,7 @@ class RegisteredUserController extends Controller
             return redirect(route('gallery.index', absolute: false));
         }
 
-        if (!config('app.allow_registration')) {
+        if (! config('app.allow_registration')) {
             abort(403, 'Registration is disabled.');
         }
 
@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (!config('app.allow_registration')) {
+        if (! config('app.allow_registration')) {
             abort(403, 'Registration is disabled.');
         }
 
